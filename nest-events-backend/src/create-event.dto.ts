@@ -1,4 +1,4 @@
 import { OmitType } from '@nestjs/mapped-types';
-import { EventEntity } from './event.entity';
+import { Event } from './event.entity';
 
-export class CreateEventDto extends OmitType(EventEntity, ['id'] as const) {}
+export class CreateEventDto extends OmitType(Event, ['id'] as const) {}

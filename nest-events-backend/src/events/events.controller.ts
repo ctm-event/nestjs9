@@ -10,14 +10,17 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Put
+  Put,
+  Query
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, MoreThan, Repository } from 'typeorm';
-import { CreateEventDto } from './create-event.dto';
-import { Event } from './event.entity';
-import { UpdateEventDto } from './update-event.dto';
+import { Repository } from 'typeorm';
 import { Attendee } from './attendee.entity';
+import { Event } from './event.entity';
+import { EventService } from './event.service';
+import { CreateEventDto } from './input/create-event.dto';
+import { ListEvents } from './input/list.event';
+import { UpdateEventDto } from './input/update-event.dto';
 
 @Controller('/events')
 export class EventsController {
@@ -27,36 +30,31 @@ export class EventsController {
     @InjectRepository(Event)
     private readonly eventRepository: Repository<Event>,
     @InjectRepository(Attendee)
-    private readonly attendeeRepository: Repository<Attendee>
+    private readonly attendeeRepository: Repository<Attendee>,
+    private eventService: EventService
   ) {}
 
   @Get('practice')
   async practice() {
-    const attendee = new Attendee();
-    attendee.name = 'Steven Nguyen';
-
-    const event = new Event();
-    event.id = 1;
-    attendee.event = event;
-
-    return await this.attendeeRepository.save(attendee);
+    return await this.eventService.getEventsWithAttendeeCountQuery().getMany();
   }
 
   @Get()
-  async findAll() {
-    this.logger.log(`Hit the findAll route`);
-    return this.eventRepository.find({
-      where: [
-        {
-          id: MoreThan(3),
-          when: MoreThan(new Date('2021-02-12'))
-        },
-        {
-          description: Like('%meet%')
-        }
-      ],
-      take: 2
-    });
+  async findAll(@Query() filter: ListEvents) {
+    console.log(`Hit the findAll route`, filter);
+    return this.eventService.getEventsWithAttendeeCountFilter(filter);
+    // return this.eventRepository.find({
+    //   where: [
+    //     {
+    //       id: MoreThan(3),
+    //       when: MoreThan(new Date('2021-02-12'))
+    //     },
+    //     {
+    //       description: Like('%meet%')
+    //     }
+    //   ],
+    //   take: 2
+    // });
   }
 
   @Get('/:id')

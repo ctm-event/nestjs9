@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import ormConfig from '../orm.config';
 import { AppJapanService } from './app-japan.service';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import ormConfig from './config/orm.config';
 import ormConfigProd from './config/orm.config.prod';
 import { EventsModule } from './events/events.module';
 import { SchoolModule } from './school/school.module';

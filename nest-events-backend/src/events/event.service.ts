@@ -4,6 +4,11 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { AttendeeAnswerEnum } from './attendee.entity';
 import { Event } from './event.entity';
 import { ListEvents, WhenEventFilter } from './input/list.event';
+import {
+  PaginationOptions,
+  PaginationResults,
+  paginate
+} from 'src/pagination/paginator';
 
 @Injectable()
 export class EventService {
@@ -35,7 +40,7 @@ export class EventService {
       );
   }
 
-  public async getEventsWithAttendeeCountFilter(filter: ListEvents) {
+  public async getEventsWithAttendeeCountFilterQuery(filter: ListEvents) {
     let query = this.getEventsWithAttendeeCountQuery();
 
     if (filter && filter.when) {
@@ -68,6 +73,16 @@ export class EventService {
       }
     }
 
-    return query.getMany();
+    return query;
+  }
+
+  public async getEventWithAttendeeFilteredPaginated(
+    filter: ListEvents,
+    paginationOptions: PaginationOptions
+  ): Promise<PaginationResults<Event>> {
+    return await paginate(
+      await this.getEventsWithAttendeeCountFilterQuery(filter),
+      paginationOptions
+    );
   }
 }

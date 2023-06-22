@@ -11,6 +11,6 @@ async function bootstrap() {
   );
   // Remove line below to enable local ValidationPipe settings
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(3030);
 }
 bootstrap();

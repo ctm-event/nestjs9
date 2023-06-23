@@ -1,10 +1,9 @@
-import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { User } from './user.entity';
-import { CreateUserDto } from './input/create.user.dto';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import { AuthService } from './auth.service';
+import { CreateUserDto } from './input/create.user.dto';
+import { User } from './user.entity';
 @Controller('users')
 export class UserController {
   constructor(
